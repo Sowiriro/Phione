@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"database/sql"
@@ -7,9 +7,9 @@ import (
 )
 
 var err error
-var database *sql.DB
+var db *sql.DB
 
-func Connect() database *sql.DB {
+func Connect() *sql.DB {
 
 	dbDriver := "mysql"
 	dbUser := "root"

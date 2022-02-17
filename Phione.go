@@ -1,12 +1,10 @@
 package main
 
 import (
-	"database/sql"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
-	"phione/database"
+	"github.com/Sowiriro/Phione/db"
 )
 
 type Hero struct {
@@ -15,7 +13,6 @@ type Hero struct {
 }
 
 	var err error
-	var db *sql.DB
 
 
 func main() {
@@ -81,13 +78,18 @@ func delete(c echo.Context) error {
 
 
 func Insert() {
-	db := database.Connect()
-	ins, err := db.Prepare("INSERT INTO heros(name) VALUES(?)")
+	log.Println("Insert 関数の最初まできた")
+	Db := db.Connect()
+	log.Println("databaseに繋げてすぐ")
+	ins, err := Db.Prepare("INSERT INTO heros(name) VALUES(?)")
+	log.Println("dbにプリペした")
 	if err != nil {
+		log.Println("データベースに問題がある")
 		log.Fatal(err)
 	}
 	defer ins.Close()
 
+	log.Println("エラーなしで通る、実行前")
 	//sql 実行
 	ins.Exec("alpha")
 
