@@ -4,7 +4,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"log"
-	"github.com/Sowiriro/Phione/db"
+	"database/sql"
+	_"github.com/go-sql-driver/mysql"
 )
 
 type Hero struct {
@@ -13,6 +14,7 @@ type Hero struct {
 }
 
 	var err error
+	var db *sql.DB
 
 
 func main() {
@@ -78,21 +80,35 @@ func delete(c echo.Context) error {
 
 
 func Insert() {
-	log.Println("Insert 関数の最初まできた")
-	Db := db.Connect()
-	log.Println("databaseに繋げてすぐ")
-	ins, err := Db.Prepare("INSERT INTO heros(name) VALUES(?)")
-	log.Println("dbにプリペした")
+
+	dbDriver := "mysql"
+	dbUser := "root"
+	dbPass := "sowiriro"
+	dbProtocol := "@tcp(localhost:3306)/"
+	dbName := "phione"
+
+
+	db, err = sql.Open(dbDriver, dbUser +":"+dbPass+ dbProtocol +dbName)
 	if err != nil {
-		log.Println("データベースに問題がある")
 		log.Fatal(err)
 	}
-	defer ins.Close()
+	defer db.Close()
 
-	log.Println("エラーなしで通る、実行前")
-	//sql 実行
-	ins.Exec("alpha")
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}else{
+		log.Println("データベース接続完了")
+	}
 
+	log.Println("Insert 関数の最初まできた")
+	// Db := db.Connect()
+	log.Println("databaseに繋げてすぐ")
+	_, err := db.Exec("INSERT INTO heros(`name`) VALUES(?)", "beta")
+	if err != nil {
+		log.Println("queryに問題がある")
+		log.Fatal(err)
+	}
 
 	log.Printf("アルファを作成しました")
 }
