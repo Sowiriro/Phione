@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"log"
 	"github.com/Sowiriro/Phione/database"
+	"github.com/Sowiriro/Phione/greeting"
+	"fmt"
 )
 
 type Hero struct {
@@ -15,6 +17,9 @@ type Hero struct {
 	var err error
 
 func main() {
+
+	message := greeting.Hello("Sowiriro")
+	fmt.Println(message)
 
 	Insert()
 
@@ -83,7 +88,7 @@ func Insert() {
 	log.Println("databaseに繋げてすぐ")
 	_, err := Db.Exec("INSERT INTO heros(name) VALUES ('sigma')")
 	if err != nil {
-		log.Println("queryに問題がある")
+		log.Println("ディレクトリ")
 		log.Fatal(err)
 	}
 
