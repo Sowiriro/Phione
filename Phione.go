@@ -4,8 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"log"
-	"database/sql"
-	_"github.com/go-sql-driver/mysql"
+	"github.com/Sowiriro/Phione/database"
 )
 
 type Hero struct {
@@ -14,8 +13,6 @@ type Hero struct {
 }
 
 	var err error
-	var db *sql.DB
-
 
 func main() {
 
@@ -81,36 +78,16 @@ func delete(c echo.Context) error {
 
 func Insert() {
 
-	dbDriver := "mysql"
-	dbUser := "root"
-	dbPass := "sowiriro"
-	dbProtocol := "@tcp(localhost:3306)/"
-	dbName := "phione"
-
-
-	db, err = sql.Open(dbDriver, dbUser +":"+dbPass+ dbProtocol +dbName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}else{
-		log.Println("データベース接続完了")
-	}
-
 	log.Println("Insert 関数の最初まできた")
-	// Db := db.Connect()
+	Db := database.Connect()
 	log.Println("databaseに繋げてすぐ")
-	_, err := db.Exec("INSERT INTO heros(`name`) VALUES(?)", "beta")
+	_, err := Db.Exec("INSERT INTO heros(name) VALUES ('sigma')")
 	if err != nil {
 		log.Println("queryに問題がある")
 		log.Fatal(err)
 	}
 
-	log.Printf("アルファを作成しました")
+	log.Printf("sigmaを作成しました")
 }
 
 
