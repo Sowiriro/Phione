@@ -7,6 +7,8 @@ import (
 	"github.com/Sowiriro/Phione/database"
 	"github.com/Sowiriro/Phione/greeting"
 	"fmt"
+	//"database/sql"
+	_"github.com/go-sql-driver/mysql"
 )
 
 type Hero struct {
@@ -83,16 +85,35 @@ func delete(c echo.Context) error {
 
 func Insert() {
 
+	// dbDriver := "mysql"
+	// dbUser := "root"
+	// dbPass := "sowiriro"
+	// dbProtocol := "@tcp(localhost:3306)/"
+	// dbName := "phione"
+
+
+	// db, err = sql.Open(dbDriver, dbUser +":"+dbPass+ dbProtocol +dbName)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer db.Close()
+
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Println("データベース接続できてないよ")
+	// 	log.Fatal(err)
+	// }else{
+	// 	log.Println("データベース接続完了")
+	// }
+
 	log.Println("Insert 関数の最初まできた")
-	Db := database.Connect()
+	db := database.Connect()
 	log.Println("databaseに繋げてすぐ")
-	_, err := Db.Exec("INSERT INTO heros(name) VALUES ('sigma')")
+	_, err := db.Exec("INSERT INTO heros(name) VALUES ('sigma')")
 	if err != nil {
-		log.Println("ディレクトリ")
+		log.Println("うまく値が入れられない")
 		log.Fatal(err)
 	}
 
 	log.Printf("sigmaを作成しました")
 }
-
-
