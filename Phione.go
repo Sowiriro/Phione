@@ -50,9 +50,27 @@ func hello(c echo.Context) error {
 }
 
 func all(c echo.Context) error {
-	
+	db := database.Connect()
 
-	return c.String(http.StatusOK, "All")
+	rows, err := db.Query(`SELECT * FROM heros`)
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	var heros []Hero
+
+	for rows.Next() {
+		var hero Hero
+		if err := rows.Scan(&hero.Id ,&hero.Name); err != nil {
+			return err
+		}
+		log.Println(hero.Id, hero.Name)
+		heros = append(heros, hero)
+	}
+
+	return c.String(http.StatusOK, "全てを取得できました")
 }
 
 func detail(c echo.Context) error {
