@@ -7,7 +7,7 @@ import (
 	"github.com/Sowiriro/Phione/database"
 	"github.com/Sowiriro/Phione/greeting"
 	"fmt"
-	//"database/sql"
+	"database/sql"
 	_"github.com/go-sql-driver/mysql"
 )
 
@@ -23,11 +23,6 @@ func main() {
 	message := greeting.Hello("Sowiriro")
 	fmt.Println(message)
 
-	// hero := Hero{Name: "alpha"}
-	// log.Printf("Starting")
-	// hero.Add()
-	// log.Printf("ending")
-
 	//インスタンスの生成
 	e := echo.New()
 
@@ -35,7 +30,7 @@ func main() {
 	e.GET("/", hello)
 	e.GET("/heros", all)
 	e.POST("/hero/create", Create)
-//	e.POST("/hero/:id", detail)
+	e.GET("/hero/:id", detail)
 //	e.POST("/hero/:id/update", update)
 //	e.DELETE("hero/delete", delete)	
 
@@ -74,6 +69,21 @@ func all(c echo.Context) error {
 }
 
 func detail(c echo.Context) error {
+	id := c.Param("id")
+	db := database.Connect()
+
+	row :=db.QueryRow("SELECT * FROM heros where id = ?", id)
+	
+	var hero Hero
+	err := row.Scan(&hero.Id, &hero.Name)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Println("そんな行はありませんでした")
+		} else {
+			log.Println(err)
+		}
+	}
+	log.Println(hero.Id, hero.Name + "を取得しました")
 	return c.String(http.StatusOK, "Detail")
 }
 
