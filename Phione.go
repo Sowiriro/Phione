@@ -32,7 +32,7 @@ func main() {
 	e.POST("/hero/create", Create)
 	e.GET("/hero/:id", detail)
 	e.POST("/hero/:id/update", update)
-//	e.DELETE("hero/delete", delete)	
+	e.DELETE("hero/:id/delete", delete)	
 
 
 	//サーバーのスタート
@@ -125,5 +125,14 @@ func update(c echo.Context) error {
 
 
 func delete(c echo.Context) error {
-	return c.String(http.StatusOK, "Delete")
+	id := c.Param("id")
+	db := database.Connect()
+	//prepare文の追加するのがベストプラクティスらしいので追記しますここに↓
+
+	_, err := db.Exec("DELETE FROM heros WHERE id = ?", id)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return c.String(http.StatusOK, id + "番をDeleteしました")
 }
