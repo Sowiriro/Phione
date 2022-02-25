@@ -31,7 +31,7 @@ func main() {
 	e.GET("/heros", all)
 	e.POST("/hero/create", Create)
 	e.GET("/hero/:id", detail)
-//	e.POST("/hero/:id/update", update)
+	e.POST("/hero/:id/update", update)
 //	e.DELETE("hero/delete", delete)	
 
 
@@ -108,6 +108,18 @@ func Create(c echo.Context) error {
 
 
 func update(c echo.Context) error {
+	id := c.Param("id")
+	name := c.FormValue("name")
+	db := database.Connect()
+
+	//prepare文の追加するのがベストプラクティスらしいので追記しますここに↓
+
+	_, err := db.Exec("UPDATE heros SET name = ? WHERE id = ?", name, id)
+	if err != nil {
+		return err
+	}
+
+	log.Println(name + "にUpdateしました")
 	return c.String(http.StatusOK, "Update")
 }
 
